@@ -52,7 +52,7 @@ IRFs are created during the learning procedure of the model from collected data 
 Building CAT model with IRT is very straightforward. IRT itself, as was described above, is in the form prepared to be used for CAT. With the model fitted from sample data we have IRFs for every question. In every phase of the test we can compute an estimate of the latent skill $\theta$ based on answers $x$: $p(\theta|x)$. For this estimations Empirical Bayes or Multiple Imputation methods of IRT are used. Having the value of the latent skill we know probabilities of correct answers to every question. More importantly we are able to calculate the information provided by asking the question. This is called item information and is given by the formula
 $$I_i(\theta)=\frac{(p_i'(\theta))^2}{p_i(\theta)q_i(\theta)}$$
 where $p_i$, $q_i$ are probabilities of correct and incorrect\footnote{With 3 parametric model these two number do not necessarily sum to 1}. There is an example of typical item information functions (same parameters of items as in the Table~\ref{tab:IRFs}) in the picture~\ref{pic:IG}. This item information provide one, and most straightforward, way of next question selection. In every step the question $X^*$ which is selected is the one with the highest item information. 
-$$X^*(\theta) = \argmax_i(I_i(\theta))$$
+$$X^*(\theta) = \arg\max_i I_i(\theta)$$
 This approach minimizes the standard error of the test procedure.
 
 \begin{figure}%
