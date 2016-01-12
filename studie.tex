@@ -1,0 +1,156 @@
+\documentclass[a4paper,12pt,oneside]{report}
+\usepackage[english]{babel}      % česky psaná práce
+\usepackage[T1]{fontenc}
+%\usepackage[cp1250]{inputenc}  % vstupní znaková sada: Windows 1250
+\usepackage[utf8x]{inputenc}  % vstupní znaková sada: ISO Latin 2
+
+\usepackage{amsmath} % balíček pro pokročilou matem. sazbu
+\usepackage{amssymb}
+\usepackage{epsfig} % balíčky pro vkládání grafických souborů typu EPS
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{url}
+\usepackage{colortbl}
+\usepackage{caption}
+\usepackage{pdfpages}
+\usepackage{hyperref}
+
+\DeclareMathOperator*{\argmin}{\arg\!\min}
+\DeclareMathOperator*{\argmax}{\arg\!\max}
+\DeclareCaptionFont{white}{ \color{white} }
+\DeclareCaptionFormat{listing}{
+  \colorbox[cmyk]{0.43, 0.35, 0.35,0.01 }{
+    \parbox{142mm}{\hspace{15pt}#1#2#3}
+  }
+}
+
+\captionsetup[lstlisting]{format=listing, labelfont=white, textfont=white, singlelinecheck=false, margin=0pt, font={bf,footnotesize} }
+\lstset{frame=single, texcl=true, breaklines=true, morecomment=[l]{//}, backgroundcolor=\color{red!10!green!10!blue!5!}}
+\renewcommand{\lstlistingname}{Ukázka kódu}
+%\usepackage{graphicx} % balíček pro vložení grafických souborů typu JPG -- přeložte pomocí PDFtex!
+
+%\usepackage{fancybox} % umožňuje pokročilé rámečkování :-)
+%\usepackage{index} % nutno použít v~případě tvorby rejstříku balíčkem makeindex
+
+%\newindex{default}{idx}{ind}{Rejstřík} % zavádí rejstřík v~případě použití balíku index
+
+
+%\oddsidemargin=10mm   % levý okraj větší (kvůli vazbě)
+%\evensidemargin=0mm
+\topmargin=-15mm      % horní okraj trochu menší
+%\textwidth=150mm      % šířka textu na stránce
+\textheight=240mm     % "výška" textu na stránce
+
+
+\pagenumbering{arabic} % číslování stránek arabskými číslicemi
+\pagestyle{plain}      % stránky číslované dole uprostřed
+
+\parindent=0pt % odsazení 1. řádku odstavce
+\parskip=7pt   % mezera mezi odstavci
+\frenchspacing % aktivuje použití některých českých typografických pravidel
+
+% definice makra pro české uvozovky:
+\def\bq{\mbox{\kern.1ex\protect\raisebox{-1.3ex}[0pt][0pt]{''}\kern-.1ex}}
+\def\eq{\mbox{\kern-.1ex``\kern.1ex}}
+\def\ifundefined#1{\expandafter\ifx\csname#1\endcsname\relax }%
+\ifundefined{uv}%
+        \gdef\uv#1{\bq #1\eq}
+\fi
+% konec .... použití makra pro psaní český uvozovek: \uv{text uvnitř uvozovek}
+
+
+%%%%%%%%%%%%%%%%%%%%%% zde jsou zavedeny některé "konstanty" - můžete, resp. musíte je ZMĚNIT %%%%%%%%%%%%%%%%%%%%%%
+\newcommand{\cvut}{Czech Technical University in~Prague}
+\newcommand{\fjfi}{Faculty of Nuclear Sciences and Physical Engineering}
+\newcommand{\kse}{}
+\newcommand{\obor}{}
+\newcommand{\zamereni}{}
+
+\newcommand{\nazevcz}{Počítačové adaptivní testování}        % zde VYPLŇTE český název práce (přesně podle zadání!)
+\newcommand{\nazeven}{Probabilistic Models for Computerized Adaptive Testing}     % zde VYPLŇTE anglický název práce (přesně podle zadání!)
+\newcommand{\autor}{Ing. Martin Plajner}           % zde VYPLŇTE své jméno a příjmení
+\newcommand{\rok}{2016}                % zde VYPLŇTE rok odevzdání, např. 2006
+\newcommand{\vedouci}{Ing. Jiří Vomlel, Ph.D.}         % zde VYPLŇTE jméno a příjmení vedoucího práce, včetně titulů
+                                                               % např. Doc. Ing. Ivo Malý, Ph.D.
+\newcommand{\pracovisteVed}{\kse, \fjfi, \cvut} % zde VYPLŇTE pracoviště vedoucího práce, je-li jiné než KSE FJFI ČVUT
+
+\newcommand{\konzultant}{---} % POKUD MÁTE určeného konzultanta, NAPIŠTE jeho jméno a příjmení
+\newcommand{\pracovisteKonz}{} % POKUD MÁTE konzultanta, NAPIŠTE jeho pracoviště
+
+
+\newcommand{\klicova}{počítačové, adaptivní, testování, bayesovské sítě}   % zde NAPIŠTE česky max. 5 klíčových slov
+\newcommand{\keyword}{computerized, adaptive, testing, Bayesian networks}       % zde NAPIŠTE anglicky max. 5 klíčových slov (přeložte z~češtiny)
+\newcommand{\abstrCZ}{} % zde NAPIŠTE abstrakt v~češtině
+\newcommand{\abstrEN}{Abstract}                  % zde NAPIŠTE abstrakt v~angličtině
+
+
+
+\begin{document}
+
+
+\thispagestyle{empty}
+
+\begin{center}
+    {\Large \bf \cvut\\[2mm] \fjfi }
+    \vspace{10mm}
+
+    \begin{tabular}{c}
+    {\bf \kse}\\
+    \end{tabular}
+
+   % logo CVUT -- pokud jej nechcete použít, zakomentujte následující řádek a odkomentujte řádek pod ním:
+      \vspace{10mm}
+    \centering{\includegraphics[height=25mm]{cvutlogobw.png}}
+    \vspace{10mm}
+   %\vspace{50mm}
+
+   {\Huge \bf \nazeven}
+
+   
+   {\Large Study for dissertation thesis}
+  {\center \textbf{Abstract:} } \\
+	\abstrEN  \\
+  {\em Key words:} 
+	{\keyword}
+   \vfill
+   {\large
+    \begin{tabular}{rl}
+    Author: & \autor\\
+    Supervisor: & \vedouci\\
+    Year: & \rok
+    \end{tabular}
+   }
+\end{center}
+
+\newpage  
+\tableofcontents 
+
+\newpage % SEM NESAHEJTE!
+
+\chapter*{Introduction} \addcontentsline{toc}{chapter}{Introduction} 
+\input{studie_intro.tex} 
+
+\input{studie_chap1.tex}
+\input{studie_chap2.tex}
+\input{studie_chap3.tex}
+\input{studie_chap4.tex}
+\input{studie_chap5.tex}
+
+
+\chapter*{Conclusions and Future Work} \addcontentsline{toc}{chapter}{Conclusions and Future Work}   
+%\input{DP_zaver.tex} 
+
+
+%%%%%%%%%%%%%%%%%%%%%%  Seznam použitých zdrojů  %%%%%%%%%%%%%%%%%%%%%%
+\newpage  % SEM NESAHEJTE!
+
+%LITERATURA
+
+%\newpage % SEM NESAHEJTE!
+%%%%%%%%%%%%%%%%%%%%%%  PŘÍLOHY PRÁCE %%%%%%%%%%%%%%%%%%%%%%
+%\appendix  % přílohy budou opravdu "Přílohy"  :-)     SEM NESAHEJTE!
+%\addcontentsline{toc}{chapter}{Appendix} % přidat položku do obsahu      SEM NESAHEJTE!
+%\part*{Appendix}  % SEM NESAHEJTE!
+%\input{app1.tex} 
+
+\end{document} % SEM NESAHEJTE!

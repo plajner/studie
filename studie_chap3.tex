@@ -1,0 +1,138 @@
+\chapter{Models for Adaptive Testing}
+
+
+We remind, as was mentioned in the section~\ref{sec:CATprocess}, the process of an adaptive test.
+\begin{enumerate}
+	\item The next question to be asked is selected.
+	\item The question is asked and a result is obtained.
+	\item The result is inserted into the model.
+	\item The model (i.e. our estimation about the student) is updated with the result.
+	\item (optional) Subsequent answers are estimated / the skill of the student is estimated
+\end{enumerate}
+In this section we will take a closer look on the model structure for different approaches. Also we will discuss the question selection from step 1 of the list above. Insertion to the model (step 3) and consequent update (steps 4 and 5) of the model is always done with respective standard tools for particular model and will not be extensively discussed here.
+
+\section{Item Response Theory}
+\label{sec_IRT}
+The beginning of Item Response Theory (IRT) appears about 5 decades ago (1968 - Statistical Theories of Mental Test Scores / Lord, Novick -- 1960 - Probabilistic Models for Some Intelligence and..., Rash). It is an interesting approach to testing human skills which has getting scientific attention ever since [CITACE - str 152]. This approach is different form the Classical Test Theory (CTT) and allows more specific measurement of certain abilities of an examinee. Internationally, there is a large amount of tests adapting this concept. It has stronger assumptions but it also provide stronger results. Nevertheless its spread is not as high as could have been expected. This smaller impact might be caused by the fact that there is a requirement for a stronger statistical and theoretical preparation of a test creator than in the CTT. In the Czech Republic there is just a few tests which use this concept. 
+
+IRT expects student to have an ability (skill) which directly influences his chance of answering a question correctly. This ability is called latent ability or latent trait $\theta$. Every question of the IRT model has associated item response function (IRF) which is a probability of a successful answer given $\theta$. There are more variants to the shape of this IRF but most commonly a 3 parametric model is used. These parameters reshape a standard logistic function. The resulting IRF, as the probability of a correct answer to \textit{i-th} with the ability of $\theta$, is given by a formula
+\begin{equation}
+p_i(\theta) = c_i + \frac{1-c_i}{1+e^{-a_i(\theta-b_i)}}
+\label{eq:IRF}
+\end{equation}
+where $c_i$ is a parameter for guessing, $a_i$ sets the scale of the question (this sets its discrimination ability - more steep curve better differentiate between students), $b_i$ is the difficulty of the question (horizontal position of the curve in the space). Typical IRFs are shown in the picture~\ref{pic:IRFs}.\\
+IRFs are created during the learning procedure of the model from collected data as most likelihood estimates of their parameters.
+
+\subsection{Building Models with the Help of IRT}
+Building CAT model with IRT is very straightforward. IRT itself, as was described above, is in the form prepared to be used for CAT \footnote{There are variants of multidimensional IRT model where it is possible to have more then one latent variable but in this work we are going to discuss only models with one latent variable.}. With the model fitted from sample data we have IRFs for every question. 
+
+\subsection{Selecting Next Question in CAT}
+
+\section{Bayesian Networks}
+In this section we go over the basic definitions of Bayesian networks. More theory can be found in []. This section is mostly focusing on the model creating using Bayesian networks.
+
+Bayesian network is a probabilistic graphical model, a conditional independence structure. It consists of the following: 
+\begin{itemize}
+	\item A set of variables (nodes)
+	\item A set of edges
+	\item A set of conditional probabilities
+\end{itemize}
+Edges between variables has to form a directed acyclic graph (DAG). Each variable has a list of mutually exclusive possible states. The conditional probability distribution is defined for each variable conditioned by its parents (variable $A$ with parents $B_1$,$B_2$,...,$B_n$ has the conditional probability table ${P(A|B_1,B_2,...,B_n)}$)\footnote{Note that the variables with no parents have the table in the form $P(A)$}. 
+
+\subsection{Building Models with the Help of BN}
+To build a model for adaptive testing as a BN we need to perform 3 steps.
+\begin{enumerate}
+	\item Describe nodes of the BN
+	\item Describe connections between nodes
+	\item Initialize conditional probability tables
+\end{enumerate}
+ 
+\subsubsection{TYPES OF NODES}
+We will divide nodes of BN which were introduced in the previous section into more specific sets. 
+\begin{itemize} 
+\item A set of $n$ variables we want to estimate $\{S_1,\ldots,S_n\}$. 
+We will call them skills or skill variables. We will use symbol $S$ to denote the multivariable $(S_1,\ldots,S_n)$ taking states $s = (s_1,\ldots s_n)$. 
+\item A set of $m$ variables representing eventual additional information about the student $\{I_1,\ldots,I_m\}$.  
+We will use the symbol $I$ to denote the multivariable $(I_1,\ldots,I_m)$ taking states $i = (i_1,\ldots,i_m)$.
+\item A set of $p$ questions (math problems) $\{X_1,\ldots,X_p\}$.  
+We will use the symbol $X$ to denote the multivariable $(X_1,\ldots,X_p)$ taking states $x = (x_1,\ldots,x_p)$.
+\end{itemize}
+
+\subsubsection{SKILL NODES}
+Skill nodes model the student abilities and, generally, they are not directly observable. It means they are hidden variables of the model and their value is not known prior to the model creation. Several decisions are to be made during the model creation.
+ 
+The first decision is the number of skill nodes itself. Should we expect one common skill or should it rather be several different skills each related to a subset of questions only? In the later case it is necessary to specify which skills are required to solve each particular question (i.e. a math problem). 
+Skills required for the successful solution of a question become parents of the considered question.
+Ordinarily, it is not possible to give a precise interpretation to this variable. 
+
+Another decision is in the state space of the skill nodes. As an unobserved variable, it is hard to decide how many states it should have. Another alternative is to use a continuous skill variable instead of a discrete one but we did not elaborate more 
+on this option, because there is no suitable apparatus for BNs to handle continuous parents. It would be possible though to create different kind of models with continuous parents other than BNs. The usage of a discrete state space can be in a way viewed as sampling (or discretizing) the continuous proficiency variable of the student. It may seem reasonable to do this to many states but each states increases the number of total parameters of the model in a nonlinear way (the exact rate depends on the structure). This means that these models are too complex and it may be very hard to learn them. Conditional probability tables may end up very sparse and that limits the generalization ability of BN. 
+
+States of the skill variable has to be viewed at in an ordinal fashion. It is necessary to order them from the weakest skill to the strongest and this assumption has to hold during the whole process of especially learning and afterwards testing as well. It means that the probability associated with the state 0.5 does not tell us the probability of the exact value rather than the probability of the skill being equal or less than 0.5. If this condition would not be taken into account we may end up with strange and uninterpretable results. For example a student who is able to answer one very hard question and then fails to answer some easy questions. It would be reasonable to say that this student is somewhere in the middle or below with his skill variable. Without the ordinality assumption a BN may try to tell us he has the skill value either small or high which does not align with our perception of the student.
+
+\label{observed_score}
+It is also possible to replace unobserved skill variables by other observed variables. The easiest way is to introduce score as a variable to the model. To do this it is necessary to use a coarse discretization. At first scores are divided into $n$ equally sized groups and by that we obtain an observed variable having $n$ possible states. The states represent a groups of students with similar scores achieved. The state of this variable is known if all questions were included in the test. Thus, during the learning phase the variable is observed and the information is used for learning. On the other hand, during the testing, the resulting score is not known -- we are trying to estimate the group into which would this test subject fall. In the testing phase the variable is again hidden (unobservable).
+
+Combinations of both types of skill variables mentioned above are also possible.
+
+\subsubsection{INFORMATION ABOUT A STUDENT}
+These nodes are quite straight forward. They collect any additional information we were able to collect about a student. The number of their states depends on the granularity of collected data. They are observed variables (observed value may be even that the piece of information was not collected) during learning and testing.
+This additional information may improve the quality of the student model. On the other hand it makes the model more complex (more parameters need to be estimated). It may mislead the reasoning based solely on question answers (especially in the later stages of testing when sufficient information about a student is collected from his/her answers). 
+
+
+\subsubsection{QUESTIONS}
+
+The last type of nodes is question node. This node type holds answers to individual questions. Its space state depends on the number of possible answers to a question. As was mentioned above it is difficult to build a CAT test which does not use multiple choice question type. In some cases it may be possible to have open answers to questions but in most cases these would be too hard to process. With multiple choice the question node has two possible state spaces
+\begin{enumerate}
+	\item One state for each answer
+	\item One state for correct answer and one for any wrong answer
+\end{enumerate}
+The first case seems to be much more informative which is true. There is a possibility to differentiate between student not only based on the fact that the answer is correct/incorrect but as well on the fact ''how much'' incorrect it is. Nevertheless it has some limitations. The main problem is the model learning. The more the states the higher the number of model parameters to be learned. With a limited training data it may be difficult to reliably estimate the model parameters. Thus it requires larger data set to learn from. Another aspect is the concept of fairness. It is questionable if it is fair to make distinctions based on wrong answers. It depends on the point of view. On one hand classical test usually do not do this. If the answer is wrong then it does not matter which one it is (we can either remove some points from the student's score or not, but it would be the same amount of points for every answer). On the other hand the selected answer shows us some information about the student's ability and there is no theoretical obstacle why not to use it.
+
+\subsubsection{CONNECTIONS BETWEEN NODES}
+
+The next step in BN model creation is to define a set of arcs between variables (nodes). This set defines relations between skills, questions, and additional information, eventually, also inbetween them.  
+
+\subsubsection{LEARNING THE MODEL}
+The last action to complete a BN is to define conditional probability tables (CPT) for each node. This is done in two steps. In the first one we manually create CPTs (probability of its states given the state of its parent) for every node. Values in these tables should reflect a general expectation and are created with expert knowledge in the field of test. For example it says that when a student have a certain skill it is more likely that he answers correctly than incorrectly. These probabilities serve as a starting point for the following algorithm.
+
+Next we learn the model with standard EM algorithm with our collected data set. This operation changes values in CPTs to reflect better our specific data.
+
+\subsubsection{TREATING MISSING DATA}
+BNs have a large advantage in the way they treat missing data (unknown values). During the prediction process unknown values are simply not inserted into the network and the inference is performed without the knowledge. During the learning with EM algorithm it also does not pose any problem.
+
+\subsection{Selecting Next Question in CAT}
+
+\subsection{Converting from Skill Node to Score}
+\label{sec:converting_skill}
+BN models usually produce assumptions about the skills of a student. In m cases this is be more useful than a regular score. On the other hand if we want to obtain a score in terms of achieved points we have to transform these skills. It is rather simple for one skill where we can easily introduce a linear combination transformation from one to another (the ordering of students stay the same on the score scale as on the expected skill proficiency values). The formula for such a transformation from the skill $S_1$ with number of states $p_1$ to the score $SC$ is as follows
+$$SC = \sum_{i=1}^{p_1}{P(S_1=p_i|e)\cdot i\cdot C} $$
+where $C$ is a chosen constant and $e$ is the evidence (answers) of the test. The term $n\cdot C$ is the maximum score because $\sum_{i}^n{P(S_1=p_i|e)} = 1$ and $\underset{i=1,\ldots, n}\argmax (i\cdot C) = n$
+
+A problem appears when we need to convert more than one skill variable. Clearly we can use the same principle and perform sum of the same linear transforms for every skill $S_1,\ldots, S_m$ and $p_1,\ldots p_m$
+\begin{equation}
+SC = \sum_{j=1}^m{\sum_{p\in \{1,\ldots,p_m\}}{P(S_j=p|e)\cdot p_m\cdot C}} 
+\label{eq:scoresum}
+\end{equation}
+
+There is a question how large impact should each individual skill variable have on the resulting score. With the formula~\ref{eq:scoresum} the impact depends on the number of skill nodes a skill have. It is possible to assign a different scaling factor $C_1,\ldots, C_m$ to each skill variable and the formula is
+
+\begin{equation}
+SC = \sum_{j=1}^m{\sum_{p\in \{1,\ldots,p_m\}}{P(S_j=p|e)\cdot p_m\cdot C_m}} 
+\label{eq:scoresum2}
+\end{equation}
+
+With $p_{max} = max(p_1,\ldots, p_m)$ and $C_i = \frac{p_{max}}{p_i}\cdot C$ we will assign the same influence to every skill and $C$ is the maximum addition to the score from every one.
+
+\section{Neural Networks}
+
+\subsubsection{TREATING MISSING DATA}
+One of the main problems with NNs is the 
+
+\subsection{Building Models with the Help of NN}
+
+\subsection{Selecting Next Question in CAT}
+
+\section{Remarks on Models and their Comparison}
+Scoring: Both IRT and BN models usually produce assumptions about the skill of a student. There has to be some transformation to the score scale if we want to produce a score of the test. For BN it was discussed in the section~\ref{sec:converting_skill}. NN models does predict the resulting score directly thus there is no conversion needed.
+Question nodes: BN allow us to exploit every answer to a question as an information about the student. This may help the adaptive test to evolve faster in case there are some answers which are ''more'' wrong that other wrong answers. As was mentioned above it requires large data samples for learning to avoid overfitting.
