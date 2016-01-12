@@ -11,24 +11,58 @@ We remind, as was mentioned in the section~\ref{sec:CATprocess}, the process of 
 \end{enumerate}
 In this section we will take a closer look on the model structure for different approaches. Also we will discuss the question selection from step 1 of the list above. Insertion to the model (step 3) and consequent update (steps 4 and 5) of the model is always done with respective standard tools for particular model and will not be extensively discussed here.
 
-\section{Item Response Theory}
+\section{Building Models with the Help of IRT}
 \label{sec_IRT}
 The beginning of Item Response Theory (IRT) appears about 5 decades ago (1968 - Statistical Theories of Mental Test Scores / Lord, Novick -- 1960 - Probabilistic Models for Some Intelligence and..., Rash). It is an interesting approach to testing human skills which has getting scientific attention ever since [CITACE - str 152]. This approach is different form the Classical Test Theory (CTT) and allows more specific measurement of certain abilities of an examinee. Internationally, there is a large amount of tests adapting this concept. It has stronger assumptions but it also provide stronger results. Nevertheless its spread is not as high as could have been expected. This smaller impact might be caused by the fact that there is a requirement for a stronger statistical and theoretical preparation of a test creator than in the CTT. In the Czech Republic there is just a few tests which use this concept. 
 
-IRT expects student to have an ability (skill) which directly influences his chance of answering a question correctly. This ability is called latent ability or latent trait $\theta$. Every question of the IRT model has associated item response function (IRF) which is a probability of a successful answer given $\theta$. There are more variants to the shape of this IRF but most commonly a 3 parametric model is used. These parameters reshape a standard logistic function. The resulting IRF, as the probability of a correct answer to \textit{i-th} with the ability of $\theta$, is given by a formula
+IRT expects student to have an ability (skill) which directly influences his chance of answering a question correctly\footnote{There are variants of multidimensional IRT model where it is possible to have more then one latent variable but in this work we are going to discuss only models with one latent variable.}. This ability is called latent ability or latent trait $\theta$. Every question of the IRT model has associated item response function (IRF) which is a probability of a successful answer given $\theta$. There are more variants to the shape of this IRF but most commonly a 3 parametric model is used (often called 3PL). These parameters reshape a standard logistic function. The resulting IRF, as the probability of a correct answer to \textit{i-th} with the ability of $\theta$, is given by a formula
 \begin{equation}
 p_i(\theta) = c_i + \frac{1-c_i}{1+e^{-a_i(\theta-b_i)}}
 \label{eq:IRF}
 \end{equation}
-where $c_i$ is a parameter for guessing, $a_i$ sets the scale of the question (this sets its discrimination ability - more steep curve better differentiate between students), $b_i$ is the difficulty of the question (horizontal position of the curve in the space). Typical IRFs are shown in the picture~\ref{pic:IRFs}.\\
+where $c_i$ is a parameter for guessing, $a_i$ sets the scale of the question (this sets its discrimination ability - more steep curve better differentiate between students), $b_i$ is the difficulty of the question (horizontal position of the curve in the space). An example of typical IRFs is shown in the Figure~\ref{pic:IRFs} and the Table~\ref{tab:IRFs} shows their parameters.\\
 IRFs are created during the learning procedure of the model from collected data as most likelihood estimates of their parameters.
 
-\subsection{Building Models with the Help of IRT}
-Building CAT model with IRT is very straightforward. IRT itself, as was described above, is in the form prepared to be used for CAT \footnote{There are variants of multidimensional IRT model where it is possible to have more then one latent variable but in this work we are going to discuss only models with one latent variable.}. With the model fitted from sample data we have IRFs for every question. 
+\begin{figure}
+\begin{floatrow}
+\ffigbox{%
+  \includegraphics[width=\columnwidth]{obr/irfs.png}%
+}{%
+  \caption{Item Response Functions}%
+	\label{pic:IRFs}%
+}
+\capbtabbox{%
+  \begin{tabular}{lccc} \hline
+  Question & a & b & c \\ \hline
+  1 & -2 & 0.3 & 0\\
+	1 & 0 & 1.5 & 0\\
+	1 & 5 & 0.7 & 0\\
+	\hline
+  \end{tabular}
+}{%
+  \caption{IRFs' parameters}%
+	\label{tab:IRFs}%
+}
+\end{floatrow}
+\end{figure}
 
-\subsection{Selecting Next Question in CAT}
 
-\section{Bayesian Networks}
+
+\subsection{Adaptive Test Procedure}
+Building CAT model with IRT is very straightforward. IRT itself, as was described above, is in the form prepared to be used for CAT. With the model fitted from sample data we have IRFs for every question. In every phase of the test we can compute an estimate of the latent skill $\theta$ based on answers $x$: $p(\theta|x)$. For this estimations Empirical Bayes or Multiple Imputation methods of IRT are used. Having the value of the latent skill we know probabilities of correct answers to every question. More importantly we are able to calculate the information provided by asking the question. This is called item information and is given by the formula
+$$I_i(\theta)=\frac{(p_i'(\theta))^2}{p_i(\theta)q_i(\theta)}$$
+where $p_i$, $q_i$ are probabilities of correct and incorrect\footnote{With 3 parametric model these two number do not necessarily sum to 1}. There is an example of typical item information functions (same parameters of items as in the Table~\ref{tab:IRFs}) in the picture~\ref{pic:IG}. This item information provide one, and most straightforward, way of next question selection. In every step the question $X^*$ which is selected is the one with the highest item information. 
+$$X^*(\theta) = \argmax_i(I_i(\theta))$$
+This approach minimizes the standard error of the test procedure.
+
+\begin{figure}%
+\includegraphics[width=\columnwidth]{obr/IIs.png}%
+\caption{Item Information Functions}%
+\label{pic:IG}%
+\end{figure}
+
+\section{Building Models with the Help of BN}
+
 In this section we go over the basic definitions of Bayesian networks. More theory can be found in []. This section is mostly focusing on the model creating using Bayesian networks.
 
 Bayesian network is a probabilistic graphical model, a conditional independence structure. It consists of the following: 
@@ -39,7 +73,6 @@ Bayesian network is a probabilistic graphical model, a conditional independence 
 \end{itemize}
 Edges between variables has to form a directed acyclic graph (DAG). Each variable has a list of mutually exclusive possible states. The conditional probability distribution is defined for each variable conditioned by its parents (variable $A$ with parents $B_1$,$B_2$,...,$B_n$ has the conditional probability table ${P(A|B_1,B_2,...,B_n)}$)\footnote{Note that the variables with no parents have the table in the form $P(A)$}. 
 
-\subsection{Building Models with the Help of BN}
 To build a model for adaptive testing as a BN we need to perform 3 steps.
 \begin{enumerate}
 	\item Describe nodes of the BN
@@ -93,7 +126,7 @@ The first case seems to be much more informative which is true. There is a possi
 
 The next step in BN model creation is to define a set of arcs between variables (nodes). This set defines relations between skills, questions, and additional information, eventually, also inbetween them.  
 
-\subsubsection{LEARNING THE MODEL}
+\subsection{Model Learning}
 The last action to complete a BN is to define conditional probability tables (CPT) for each node. This is done in two steps. In the first one we manually create CPTs (probability of its states given the state of its parent) for every node. Values in these tables should reflect a general expectation and are created with expert knowledge in the field of test. For example it says that when a student have a certain skill it is more likely that he answers correctly than incorrectly. These probabilities serve as a starting point for the following algorithm.
 
 Next we learn the model with standard EM algorithm with our collected data set. This operation changes values in CPTs to reflect better our specific data.
@@ -101,7 +134,53 @@ Next we learn the model with standard EM algorithm with our collected data set. 
 \subsubsection{TREATING MISSING DATA}
 BNs have a large advantage in the way they treat missing data (unknown values). During the prediction process unknown values are simply not inserted into the network and the inference is performed without the knowledge. During the learning with EM algorithm it also does not pose any problem.
 
-\subsection{Selecting Next Question in CAT}
+\subsection{Adaptive Test Procedure}
+During the adaptive test we use standard methods of inference in BNs to update the network. These methods compute estimations of ability variables as well as probabilities of success in unanswered questions.\\
+One task to solve during the procedure is the selection of the next question. It is repeated in every step of the testing and it is described below.
+
+Let the test be in the state after $s-1$ steps where 
+\begin{eqnarray*}
+\mathcal{X}_s & = & \{X_{i_1}\ldots X_{i_n} \ | \ i_1,\ldots,i_n \in \{1,\ldots,m\}\}
+\end{eqnarray*}
+are unobserved (unanswered) variables and 
+\small
+\begin{eqnarray*}
+\lefteqn{e \ \ =}\\
+ & & \{X_{k_1} = x_{k_1},\ldots,X_{k_o} = x_{k_o} | k_1,\ldots,k_o \in \{1,\ldots,m\}\} 
+\end{eqnarray*}
+\normalsize
+is evidence of observed variables -- questions which were already answered and, possibly, the initial information. 
+The goal is to select a variable from $\mathcal{X}_s$ to be asked as the next question. 
+We select a question with the largest expected information gain. 
+
+We compute the cumulative Shannon entropy over all skill variables of $S$ given evidence $e$.
+It is given by the following formula:
+\begin{eqnarray*}
+H(e) & = & \sum_{i = 1}^n \sum_{s_i} -P(S_i=s_i|e) \cdot \log P(S_i=s_i|e) \enspace .
+\end{eqnarray*}
+
+Assume we decide to ask a question $X' \in \mathcal{X}_s$ with possible outcomes $x'_1,\ldots,x'_p$. 
+After inserting the observed outcome the entropy over all skills changes. 
+We can compute the value of new entropy for evidence extended by $X' = x_j'$, $j \in \{1,\ldots,p\}$ as:
+\begin{eqnarray*}
+\lefteqn{H(e,X'=x_j') \ \ =}\\
+& & \sum_{i =1}^n \sum_{s_i} \begin{array}{ll}
+-P(S_i=s_i|e,X'=x_j')\\
+\cdot \log P(S_i=s_i|e,X'=x_j') 
+\end{array}\enspace .
+\end{eqnarray*}
+This entropy $H(e,X'=x_j')$ is the sum of individual entropies over all skill nodes. Another option would be to compute the entropy of the joint probability distribution of all skill nodes. This would take into account correlations between these nodes. In our task we want to estimate marginal probabilities of all skill nodes. In the case of high correlations between two (or more) skills the second criterion would assign them a lower significance in the model. This is the behavior we wanted to avoid. The first criterion assigns the same significance to all skill nodes which seems to us as a better solution. Given the objective of the question selection, the greedy strategy based on the sum of entropies provides good results. Moreover, the computational time required for the proposed method is lower.
+
+Now, we can compute the expected entropy after answering question $X'$: 
+\begin{eqnarray*}
+EH(X',e) & = & \sum_{j=1}^p P(X'=x_j'|e) \cdot H(e,X'=x_j') \enspace .
+\end{eqnarray*}
+Finally, we choose a question $X^*$ that maximizes the information gain $IG(X',e)$
+\begin{eqnarray*}
+X^* & = & \operatorname*{arg\,max}_{X' \in \mathcal{X}_s} IG(X',e) \ , \ \mbox{where}\\
+IG(X',e) & = & H(e)  - EH(X',e) \enspace .
+\end{eqnarray*}
+
 
 \subsection{Converting from Skill Node to Score}
 \label{sec:converting_skill}
@@ -124,15 +203,14 @@ SC = \sum_{j=1}^m{\sum_{p\in \{1,\ldots,p_m\}}{P(S_j=p|e)\cdot p_m\cdot C_m}}
 
 With $p_{max} = max(p_1,\ldots, p_m)$ and $C_i = \frac{p_{max}}{p_i}\cdot C$ we will assign the same influence to every skill and $C$ is the maximum addition to the score from every one.
 
-\section{Neural Networks}
+\section{Building Models with the Help of NN}
 
 \subsubsection{TREATING MISSING DATA}
 One of the main problems with NNs is the 
 
-\subsection{Building Models with the Help of NN}
-
-\subsection{Selecting Next Question in CAT}
+\subsection{Selecting Next Question}
 
 \section{Remarks on Models and their Comparison}
-Scoring: Both IRT and BN models usually produce assumptions about the skill of a student. There has to be some transformation to the score scale if we want to produce a score of the test. For BN it was discussed in the section~\ref{sec:converting_skill}. NN models does predict the resulting score directly thus there is no conversion needed.
-Question nodes: BN allow us to exploit every answer to a question as an information about the student. This may help the adaptive test to evolve faster in case there are some answers which are ''more'' wrong that other wrong answers. As was mentioned above it requires large data samples for learning to avoid overfitting.
+Scoring: Both IRT and BN models usually produce assumptions about the skill of a student. There has to be some transformation to the score scale if we want to produce a score of the test. For BN it was discussed in the section~\ref{sec:converting_skill}. NN models does predict the resulting score directly thus there is no conversion needed.\\
+Question nodes: BN allow us to exploit every answer to a question as an information about the student. This may help the adaptive test to evolve faster in case there are some answers which are ''more'' wrong that other wrong answers. As was mentioned above it requires large data samples for learning to avoid overfitting.\\
+Additional Information: BN and NN models allow us to include additional information about a student. This is not possible in the standard version of IRT-CAT. Inclusion of such additional information may improve prediction power of the model especially during the first stages of the test, but its influence rapidly decrease in the later stages. The use of this information is also questionable in terms of fairness. It may be hard to justify results of the test being influenced by factors other than answers. On the other hand if we want to build a tutoring system, there should be no problem in using it.
