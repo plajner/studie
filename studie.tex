@@ -1,42 +1,32 @@
 \documentclass[a4paper,12pt,oneside]{report}
 \usepackage[english]{babel}      % česky psaná práce
-%\usepackage[T1]{fontenc}
-%\usepackage[cp1250]{inputenc}  % vstupní znaková sada: Windows 1250
 \usepackage[utf8x]{inputenc}  % vstupní znaková sada: ISO Latin 2
 
 \usepackage{amsmath} % balíček pro pokročilou matem. sazbu
 \usepackage{amssymb}
-%\usepackage{epsfig} % balíčky pro vkládání grafických souborů typu EPS
-\usepackage{listings}
-\usepackage{xcolor}
 \usepackage{url}
-\usepackage{colortbl}
-\usepackage{caption}
-\usepackage{pdfpages}
 \usepackage{hyperref}
-\usepackage{floatrow}
-  
-\newfloatcommand{capbtabbox}{table}[][\FBwidth]
 
-\DeclareMathOperator*{\argmin}{\arg\!\min}
-\DeclareMathOperator*{\argmax}{\arg\!\max}
-\DeclareCaptionFont{white}{ \color{white} }
-\DeclareCaptionFormat{listing}{
-  \colorbox[cmyk]{0.43, 0.35, 0.35,0.01 }{
-    \parbox{142mm}{\hspace{15pt}#1#2#3}
-  }
-}
 
-\captionsetup[lstlisting]{format=listing, labelfont=white, textfont=white, singlelinecheck=false, margin=0pt, font={bf,footnotesize} }
-\lstset{frame=single, texcl=true, breaklines=true, morecomment=[l]{//}, backgroundcolor=\color{red!10!green!10!blue!5!}}
-\renewcommand{\lstlistingname}{Ukázka kódu}
-%\usepackage{graphicx} % balíček pro vložení grafických souborů typu JPG -- přeložte pomocí PDFtex!
 
-%\usepackage{fancybox} % umožňuje pokročilé rámečkování :-)
-%\usepackage{index} % nutno použít v~případě tvorby rejstříku balíčkem makeindex
+%\usepackage{listings}
+%\usepackage{xcolor}
+%\usepackage{colortbl}
+%\usepackage{caption}
+\usepackage{pdfpages}
+ 
+%\DeclareMathOperator*{\argmin}{\arg\!\min}
+%\DeclareMathOperator*{\argmax}{\arg\!\max}
+%\DeclareCaptionFont{white}{ \color{white} }
+%\DeclareCaptionFormat{listing}{
+%  \colorbox[cmyk]{0.43, 0.35, 0.35,0.01 }{
+%    \parbox{142mm}{\hspace{15pt}#1#2#3}
+%  }
+%}
 
-%\newindex{default}{idx}{ind}{Rejstřík} % zavádí rejstřík v~případě použití balíku index
-
+%\captionsetup[lstlisting]{format=listing, labelfont=white, textfont=white, singlelinecheck=false, margin=0pt, font={bf,footnotesize} }
+%\lstset{frame=single, texcl=true, breaklines=true, morecomment=[l]{//}, backgroundcolor=\color{red!10!green!10!blue!5!}}
+%\renewcommand{\lstlistingname}{Ukázka kódu}
 
 %\oddsidemargin=10mm   % levý okraj větší (kvůli vazbě)
 %\evensidemargin=0mm
@@ -44,22 +34,11 @@
 %\textwidth=150mm      % šířka textu na stránce
 \textheight=240mm     % "výška" textu na stránce
 
-
 \pagenumbering{arabic} % číslování stránek arabskými číslicemi
 \pagestyle{plain}      % stránky číslované dole uprostřed
 
-\parindent=0pt % odsazení 1. řádku odstavce
-\parskip=7pt   % mezera mezi odstavci
-\frenchspacing % aktivuje použití některých českých typografických pravidel
-
-% definice makra pro české uvozovky:
-\def\bq{\mbox{\kern.1ex\protect\raisebox{-1.3ex}[0pt][0pt]{''}\kern-.1ex}}
-\def\eq{\mbox{\kern-.1ex``\kern.1ex}}
-\def\ifundefined#1{\expandafter\ifx\csname#1\endcsname\relax }%
-\ifundefined{uv}%
-        \gdef\uv#1{\bq #1\eq}
-\fi
-% konec .... použití makra pro psaní český uvozovek: \uv{text uvnitř uvozovek}
+%\parindent=0pt % odsazení 1. řádku odstavce
+%\parskip=7pt   % mezera mezi odstavci
 
 
 %%%%%%%%%%%%%%%%%%%%%% zde jsou zavedeny některé "konstanty" - můžete, resp. musíte je ZMĚNIT %%%%%%%%%%%%%%%%%%%%%%
@@ -94,28 +73,32 @@
 \thispagestyle{empty}
 
 \begin{center}
-    {\Large \bf \cvut\\[2mm] \fjfi }
+    \Large  \textbf{\cvut}\\[2mm] \fjfi 
+		
     \vspace{10mm}
 
-    \begin{tabular}{c}
-    {\bf \kse}\\
-    \end{tabular}
-
-   % logo CVUT -- pokud jej nechcete použít, zakomentujte následující řádek a odkomentujte řádek pod ním:
+    % logo CVUT -- pokud jej nechcete použít, zakomentujte následující řádek a odkomentujte řádek pod ním:
       \vspace{1mm}
-    \centering{\includegraphics[height=25mm]{cvutlogobw.png}}
-    \vspace{10mm}
+    
+		\begin{center}
+		{\includegraphics[height=25mm]{cvutlogobw.png}}
+		\end{center}
+    \vspace{7mm}
    %\vspace{50mm}
 
-   {\Huge \bf \nazeven}
-
-   
-   {\Large Study for dissertation thesis}
+   \huge \textbf{Probabilistic Models for Computerized Adaptive Testing}
+	
+   \vspace{2mm}
+   \Large Study for dissertation thesis
+	
+	\normalsize
   {\center \textbf{Abstract:} } \\
 	\abstrEN  \\
   {\em Key words:} 
 	{\keyword}
-   \vfill
+   
+	\vfill
+	
    {\large
     \begin{tabular}{rl}
     Author: & \autor\\
