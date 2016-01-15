@@ -1,23 +1,23 @@
-\chapter{Adaptive Testing and Item Response Theory }
-This chapter is going through the concept of Computerized Adaptive Testing (CAT) in a higher detail. It also explains the Item Response Theory which is a type of a student model developed as an alternative to the classical testing theory. It is often used for the deployment of CAT. This work further uses this model to provide a well established comparison to more advanced methods which are being explored.
+\chapter{Computerized Adaptive Testing}
+This chapter introduces the concept of Computerized Adaptive Testing (CAT) and summarizes its advantages and disadvantages.
 
 CAT is a concept of testing which is getting large scientific attention for about two decades. 
 $[Wainer, H., Dorans, N. J., Flaugher, R., Green, B. F., Mislevy, R. J., Steinberg, L., Thissen, D. (2000). Computerized adaptive testing: A primer (2nd ed.). Mahwah: Lawrence Erlbaum.
 van der Linden, W. J., Glas, C. A. W. (2010). Elements of adaptive testing. New York: Springer.
 van der Linden, Wim J., Glas, Cees A. W. (Eds.), Computerized Adaptive Testing: Theory and Practice].$
 
-With CAT we build knowledge-based tests. These tests are computer administered and computer controlled. The computer system is selecting questions for a student who is taking the test. 
+With CAT we build knowledge-based tests. These tests are computer administered and computer controlled. The computer system is selecting questions for a student taking the test. 
 
 
-The process can be divided into two phases: model creation and testing. In the first one the model of the student is created while in the second one the model is used to actually test examinees. There are many different model types which can be used for adaptive testing. In this work we are going to cover Item Response Theory (IRT), which is a regular model for CAT, Bayesian networks, which are graphical models with increasing usage in many different fields, and Neural networks, which are very commonly used in many areas of artificial intelligence. We will pay closer attention to these models later on but regardless of the model we choose the testing part follows always the same scheme. With the prepared and calibrated (learned from data) model, CAT testing repeats following steps:
+The process can be divided into two phases: model creation and testing. In the first one the model of the student is created while in the second one the model is used to actually test examinees. There are many different model types which can be used for adaptive testing. In this work we are going to cover Item Response Theory (IRT), which is a model regularly used for CAT, Bayesian networks, and Neural Networks, which are both models commonly used in many areas of artificial intelligence for a large variety of tasks. We will pay closer attention to these models later on but regardless of the model we choose the testing part follows always the same scheme. With the prepared and calibrated model, CAT testing repeats following steps:
 
 \label{sec:CATprocess}
 \begin{itemize}
 	\item The next question to be asked is selected.
-	\item The question is asked and a result is obtained.
-	\item The result is inserted into the model.
-	\item The model (i.e. our estimation about the student) is updated with the result.
-	\item (optional) Subsequent answers are estimated / the skill of the student is estimated
+	\item This question is asked and a result is obtained.
+	\item This result is inserted into the model.
+	\item The model (i.e. our estimation about the student's skill) is updated with this result.
+	\item (optional) Answers to remaining question are estimated
 \end{itemize}
 
 This procedure is repeated until we reach a termination criterion. There are many different stopping criteria. It can be a time restriction, the number of questions, or a confidence interval of the estimated variables (i.e. reliability of the test).
@@ -34,7 +34,7 @@ Intelligent tutoring system: It is quite easy to convert a CAT test to an intell
 Computer administration: The test is done electronically and thus results are available immediately and can be stored easily. It is also possible to deliver the test over the internet.
 
 \section{Disadvantages of CAT}
-\emph{Over usage of a couple of items: }This issue greatly depends on the way we use to select subsequent questions for students. Nevertheless with most commonly used criteria there is a danger of selecting the same questions for groups of students and/or selecting certain questions in many tests. For example the first question, if the selection process is not modified, should be the same for every student (we have no information about the student so far thus the selection process should result in selecting the same question). Afterwards subsequent questions are the same for groups of students. These groups decrease in size with more answered questions as the number of possible combinations of answers increase. This behavior may not be problematic and can be lowered by having a large question bank containing different questions with similar properties (i.e. difficulty). Moreover it is possible to include corrections into the selection process to provide a wider spread of question selection over the question bank (usually with the cost of decreased precision).
+\emph{Over usage of a some items: }This issue greatly depends on the way we use to select subsequent questions for students. Nevertheless, with most commonly used criteria there is a danger of selecting the same questions for groups of students and/or selecting certain questions in many tests. For example, the first question, if the selection process is not modified, will be the same for each student. We have no information about the student so far and the selection process results in the same question. Following questions will be the same for groups of students. These groups shrink with more answered questions as the number of possible combinations of answers increase. This behavior can be reduced by having a large question bank containing many different questions with similar properties (i.e. difficulty). Moreover, it is possible to modify the selection process to ensure a wider spread of selected questions over the question bank (with the cost of decreased precision).
 
 \emph{Initial data collection:} Prior to starting a test using CAT it is necessary to obtain a large set of data (full test results) from a representative population. This data is used to create and calibrate the student model used for testing. Results used for this creation need to come from a full length tests (optionally it would be possible, but not preferable, to have a several sub-tests). This means students participating in the initial testing are required to fill answers to many items.
 
@@ -42,4 +42,4 @@ Computer administration: The test is done electronically and thus results are av
 
 \emph{Computer administration:} In order to test students it is necessary to create an environment for such testing on the computer. Also it is necessary for students to have access to a computer rather than having just a pen.
 
-\emph{Results reception:} Last but not least, there might be some issues with the reception of results by students taking the test. It may be hard to explain and for them to comprehend the fact that even though they got completely (or partly) different questions they are sorted on the same scale (sometimes even obtaining the same score). It may seem unfair and incomparable because of the question selection process (exactly the same way as with the question selection performed in the Czech driving license test as mention in the introduction – where the selection is done at random). In reality CAT tests tend to be more fair the regular paper-pen tests. [CITACE]
+\emph{Results perception:} Last but not least, there might be some issues with the perception of results by students taking the test. It may be hard to explain to them and for them to comprehend the fact, that even though they got completely (or partly) different questions they are sorted on the same scale (sometimes even obtaining the same score). It may seem unfair and incomparable because of the question selection process. The feeling may be the same as with the the Czech driving license test mention in the introduction but there the selection is done at random. In reality CAT tests tend to be more fair the regular paper-pen tests. [CITACE]

@@ -20,7 +20,7 @@ IRT expects student to have an ability (skill) which directly influences his/her
 p_i(\theta) = c_i + \frac{1-c_i}{1+e^{-a_i(\theta-b_i)}}
 \label{eq:IRF}
 \end{equation}
-where $c_i$ is a parameter for guessing, $a_i$ sets the scale of the question (this sets its discrimination ability - more steep curve better differentiate between students), $b_i$ is the difficulty of the question (horizontal position of the curve in the space). An example of typical IRFs is shown in the Figure~\ref{pic:IRFs} and the Table~\ref{tab:IRFs} shows their parameters.\\
+where $c_i$ is a parameter for guessing, $a_i$ sets the scale of the question (this sets its discrimination ability - more steep curve better differentiate between students), $b_i$ is the difficulty of the question (horizontal position of the curve in the space). An example of typical IRFs is shown in the Figure~\ref{pic:IRFs}. There is a dependence of the correct answer $P$ based on the skill $\theta$. The Table~\ref{tab:IRFs} shows parameters of these functions.\\
 IRFs are created during the learning procedure of the model from collected data as most likelihood estimates of their parameters.
 
 \begin{figure}
@@ -74,7 +74,7 @@ To build a model for adaptive testing as a BN we need to perform 3 steps.
 	\item Initialize conditional probability tables
 \end{enumerate}
  
-\subsubsection{TYPES OF NODES}
+\subsubsection{Types of Nodes}
 We will divide nodes of a BN into more specific sets. 
 \begin{itemize} 
 \item A set of $n$ variables we want to estimate $\{S_1,\ldots,S_n\}$. 
@@ -85,7 +85,7 @@ We will use the symbol $I$ to denote the multivariable $(I_1,\ldots,I_m)$ taking
 We will use the symbol $X$ to denote the multivariable $(X_1,\ldots,X_p)$ taking states $x = (x_1,\ldots,x_p)$.
 \end{itemize}
 
-\subsubsection{SKILL NODES}
+\subsubsection{Skill Nodes}
 Skill nodes model the student abilities and, generally, they are not directly observable. It means they are hidden variables of the model and their value is not known prior to the model creation. Several decisions are to be made during the model creation.
  
 The first decision is the number of skill nodes itself. Should we expect one common skill or should it rather be several different skills each related to a subset of questions only? In the later case it is necessary to specify which skills are required to solve each particular question (i.e. a math problem). 
@@ -101,12 +101,12 @@ It is also possible to replace unobserved skill variables by other observed vari
 
 Combinations of both types of skill variables are also possible.
 
-\subsubsection{INFORMATION ABOUT A STUDENT}
+\subsubsection{Information about a Student}
 Information nodes gather any additional information we have about a student. They are observed variables. The number of their states correspond to the possible options of the specific piece of information. One state may be also included as ''unknown'', especially if it holds any information value. For example, for gender we can have 3 states (male, female, unknown). In that case we feel that not knowing itself is an information. Otherwise we would have only two states.
 This additional information may improve the quality of the student model. As we discuss in the following chapter, its added value showed up as not very essential. The inclusion of these variables makes the model more complex (more parameters need to be estimated). It may mislead the reasoning by creating prejudices about certain groups of students. The added benefit is low especially in the later stages of testing when sufficient information about a student is collected from his/her answers. 
 
 
-\subsubsection{QUESTIONS}
+\subsubsection{Question}
 
 The last type of nodes is a question node. This node type holds answers to individual questions. Its state space depends on the number of possible answers to a question. As was mentioned above it is difficult to build a CAT test which does not use multiple choice question type. In some cases it may be possible to have open answers to questions but in most cases these would be too hard to process by the computer system. With multiple choice a question node has two possible state spaces:
 \begin{enumerate}
@@ -115,14 +115,14 @@ The last type of nodes is a question node. This node type holds answers to indiv
 \end{enumerate}
 The first case is more informative. It gives us a possibility to differentiate between students not only based on the fact that the answer is correct/incorrect but as well on the fact which incorrect one it is. Nevertheless, it has some limitations. The more the states the higher the number of model parameters to be learned. With a limited training data it may be difficult to reliably estimate model parameters. It requires larger data set to learn from. Another aspect is the concept of fairness. It is questionable if it is fair to make distinctions based on wrong answers. On one hand, a classical test usually do not do this. If the answer is wrong then it does not matter which one it is (we can either remove some points from the student's score or not, but it would be the same amount of points for every answer). On the other hand the selected answer shows us some information about the student's ability and there is no theoretical obstacle why not to use it.
 
-\subsubsection{CONNECTIONS BETWEEN NODES}
+\subsubsection{Connections between Nodes}
 
 The next step in the BN model creation is to define a set of arcs between variables (nodes). This set defines relations between skills, questions, and additional information, eventually, also inbetween them.  
 
 \subsection{Model Learning}
 The last action to complete a BN is to define conditional probability tables (CPT) for each node. This is done in two steps. In the first one we manually create CPTs (probability of its states given the state of its parent) for every node. Values in these tables should reflect a general expectation and are created with expert knowledge in the field of the test. These probabilities serve as a starting point for the following algorithm. Next we learn the model with standard EM algorithm with collected data. This operation changes values in CPTs to better reflect our specific data.
 
-\subsubsection{TREATING MISSING DATA}
+\subsubsection{Treating Missing Data}
 BNs have a large advantage in the way they treat missing data (unknown values). During the prediction process unknown values are simply not inserted into the network and the inference is performed without the knowledge. The learning EM algorithm also has no problems with handling missing data.
 
 \subsection{Adaptive Test Procedure}
