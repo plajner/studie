@@ -1,34 +1,37 @@
 \chapter{Models for Adaptive Testing}
+ 
 
-
-We remind, as was mentioned in the section~\ref{sec:CATprocess}, the process of an adaptive test.
-\begin{enumerate}
+We remind, as was mentioned in the Section~\ref{sec:CATprocess}, the process of an adaptive test.
+\begin{itemize}
 	\item The next question to be asked is selected.
-	\item The question is asked and a result is obtained.
-	\item The result is inserted into the model.
-	\item The model (i.e. our estimation about the student) is updated with the result.
-	\item (optional) Subsequent answers are estimated / the skill of the student is estimated
-\end{enumerate}
+	\item This question is asked and an answer is obtained.
+	\item This answer is inserted into the model.
+	\item The model (i.e., our estimation about the student's skill) is updated.
+	\item (optional) Answers to remaining question are estimated
+\end{itemize}
 In this section we will take a closer look on the model structure for different approaches. Also we will discuss the question selection from step 1 of the list above. Insertion to the model (step 3) and consequent update (steps 4 and 5) of the model is always done with respective standard tools for particular model and will not be extensively discussed here.
 
 \section{Building Models with the Help of IRT}
 \label{sec_IRT}
-The beginning of Item Response Theory (IRT) appears about 5 decades ago (1968 - Statistical Theories of Mental Test Scores / Lord, Novick -- 1960 - Probabilistic Models for Some Intelligence and..., Rash). This approach is different form the Classical Test Theory (CTT) and it has getting scientific attention ever since [CITACE - str 152].  IRT allows more specific measurement of certain abilities of an examinee. Internationally, there is a large amount of tests adapting this concept. It has stronger assumptions but it also provide stronger results. Nevertheless its spread is not as high as could have been expected. This smaller impact might be caused by the fact that there is a requirement for a stronger statistical and theoretical preparation of a test creator than in the CTT. \textbf{In the Czech Republic there is just a few tests which use this concept. []} 
+The beginning of Item Response Theory (IRT) appears about 5 decades ago~\cite{Lord, Rasch1981, Rasch1993}. This approach is different from the Classical Test Theory (CTT) and it is getting scientific attention ever since.  IRT allows more specific measurement of certain abilities of an examinee. Internationally, there is a large amount of tests adapting this concept. It has stronger assumptions but it also provide stronger results. Nevertheless its spread is not as high as could have been expected. This smaller impact might be caused by the fact that there is a requirement for a stronger statistical and theoretical preparation of a test creator than in the CTT. In the Czech Republic there is just a few large normalized tests which use this concept~\cite{2011psychometrics}\footnote{One of them is, for example, the Woodcock–Johnson test~\cite{Anton2010}}. 
 
-IRT expects student to have an ability (skill) which directly influences his/her chance of answering a question correctly\footnote{There are variants of multidimensional IRT model where it is possible to have more then one latent variable but in this section we are going to discuss only models with one latent variable.}. This ability is called latent ability or latent trait $\theta$. Every question of the IRT model has associated item response function (IRF) which is a probability of a successful answer given $\theta$. There are more variants to the shape of this IRF but most commonly a 3 parametric model is used (often called 3PL). These parameters reshape a standard logistic function. The resulting IRF, as the probability of a correct answer to \textit{i-th} with the ability of $\theta$, is given by a formula
+IRT expects student to have an ability (skill) which directly influences his/her chance of answering a question correctly\footnote{There are variants of multidimensional IRT model where it is possible to have more then one latent variable but in this section we are going to discuss only models with one latent variable.}. This ability is called latent ability or latent trait $\theta$. When we have only one variable, it is common to refer to it as proficiency variable. We will stay with the more general skill variable term because we will have more variables in the following parts (Bayesian networks). Every question of the IRT model has an associated item response function (IRF) which is a probability of a successful answer given $\theta$. There are more variants of the shape of this IRF but mostly a 3 parametric model is used (often called 3PL). These parameters reshape a standard logistic function. The resulting IRF, as the probability of a correct answer to \textit{i-th} with the ability of $\theta$, is given by a formula
 \begin{equation}
 p_i(\theta) = c_i + \frac{1-c_i}{1+e^{-a_i(\theta-b_i)}}
 \label{eq:IRF}
 \end{equation}
-where $c_i$ is a parameter for guessing, $a_i$ sets the scale of the question (this sets its discrimination ability - more steep curve better differentiate between students), $b_i$ is the difficulty of the question (horizontal position of the curve in the space). An example of typical IRFs is shown in the Figure~\ref{pic:IRFs}. There is a dependence of the correct answer $P$ based on the skill $\theta$. The Table~\ref{tab:IRFs} shows parameters of these functions.\\
-IRFs are created during the learning procedure of the model from collected data as most likelihood estimates of their parameters.
+where $c_i$ is a parameter for guessing, $a_i$ sets the scale of the question (this sets its discrimination ability - a steeper curve better differentiate between students), $b_i$ is the difficulty of the question (horizontal position of a curve in space). An example of typical IRFs is shown in the Figure~\ref{pic:IRFs}. The dependence of a correct answer probability $P$ based on the skill $\theta$ is displayed. The Table~\ref{tab:IRFs} shows parameters of these functions.
+
+IRFs are created either by setting parameters manually or automatically through machine learning procedures. Manual creation is done by field experts based on their knowledge and experiences in the field. Automatic creation is done from collected data as most likelihood estimates of IRFs' parameters.
 
 \begin{figure}
+\centering
   \includegraphics[width=0.8\columnwidth]{obr/irfs.png}%
   \caption{Item Response Functions}%
 	\label{pic:IRFs}%
 \end{figure}
 \begin{table}%
+\centering
 	\begin{tabular}{lccc} \hline
 		Question & a & b & c \\ \hline
 		1 & -2 & 0.3 & 0\\
@@ -47,9 +50,12 @@ Building CAT model with IRT is very straightforward. IRT itself, as was describe
 $$I_i(\theta)=\frac{(p_i'(\theta))^2}{p_i(\theta)q_i(\theta)}$$
 where $p_i'$ is the derivation of the item response function $p_i$. There is an example of typical item information functions (with the same parameters of items as in the Table~\ref{tab:IRFs}) in the Figure~\ref{pic:IG}. This item information provide one, and most straightforward, way of the next question selection. In every step the question $X^*$ which is selected is one with the highest item information. 
 $$X^*(\theta) = \arg\max_i I_i(\theta)$$
-\textbf{This approach minimizes the standard error of the test procedure.}
+This approach minimizes the standard error of the test procedure~\cite{Hambleton1991} because the standard error of measurement produced by $i$-th $SE_i$ item is defined as
+$$SE_i(\theta) = \frac{1}{\sqrt{I_i(\theta)}}.$$
+This means that the more precision of difficulty we are able to achieve while asking questions the less error of measurement.
 
 \begin{figure}%
+\centering
 \includegraphics[width=0.8\columnwidth]{obr/IIs.png}%
 \caption{Item Information Functions}%
 \label{pic:IG}%
@@ -57,7 +63,7 @@ $$X^*(\theta) = \arg\max_i I_i(\theta)$$
 
 \section{Building Models with the Help of BN}
 
-In this section we go over the basic definitions of Bayesian networks. More theory can be found in []. This section is focused on creation Bayesian networks models for CAT.
+In this section we go over the basic definitions of Bayesian networks. More theory can be found in~\cite{Almond2015, Jensen2007, Kjrulff2008, Madsen1999}. This section is focused on creation Bayesian networks models for CAT.
 
 Bayesian network is a probabilistic graphical model, a conditional independence structure. It consists of the following: 
 \begin{itemize}
@@ -94,7 +100,7 @@ Skills required for the successful solution of a question become parents of the 
 Another decision we are facing is about the size of a state space of skill nodes. As an unobserved variable, it is hard to decide how many states it should have. Another alternative is to use a continuous skill variable instead of a discrete one but we did not elaborate more 
 on this option. For BNs no suitable apparatus to handle continuous parents exists. It would be possible though to create different kind of models with continuous parents other than BNs\footnote{We will elaborate more on this in the last chapter.}. The usage of a discrete state space can be in a way viewed as sampling (or discretizing) the continuous skill variable of the student. It may seem reasonable to do this to many states but each states increases the number of total parameters of the model in a nonlinear way (the exact rate depends on the structure). This means that these models are too complex and it may be very hard to learn them. Conditional probability tables may end up very sparse and that limits the generalization ability of BN. 
 
-States of the skill variable have to be viewed ordinally. It is necessary to order them from the weakest skill to the strongest and this assumption has to hold during the whole process of especially learning and afterwards testing as well. It means, for example, that the probability of 0.5 of a state does tell us the probability of the skill being less or equal than 0.5. If this condition would not be taken into account it may cause inconsistent results. For example a student who is able to answer one very hard question and then fails to answer some easy questions. It would be reasonable to say that the student's ability is somewhere below the middle of its scale. Without the ordinality assumption a BN model could result in probability distribution with peaks at small and high skill levels. It would mean that the student is either good or bad, not mediocre. This does not align with our perception of the student.
+States of the skill variable have to be viewed ordinally. It is necessary to order them from the weakest skill to the strongest and this assumption has to hold during the whole process of especially learning and, afterwards, testing as well. It means, for example, that the probability of 0.5 of a state does tell us the probability of the skill being less or equal than 0.5. If this condition would not be taken into account it may cause inconsistent results. For example a student who is able to answer one very hard question and then fails to answer some easy questions. It would be reasonable to say that the student's ability is somewhere below the middle of its scale. Without the ordinality assumption a BN model could result in probability distribution with peaks at small and high skill levels. It would mean that the student is either good or bad, not mediocre. This does not align with our perception of the student.
 
 \label{observed_score}
 It is also possible to replace unobserved skill variables by other observed variables. The easiest way is to introduce score as a variable to the model. To do this it is necessary to use a coarse discretization. At first scores are divided into $n$ equally sized groups and by that we obtain an observed variable having $n$ possible states. The states represent a group of students with similar scores achieved. During the learning phase the variable is observed and the information is used for learning. On the other hand, during the testing, the resulting score is not known -- we are trying to estimate the group into which a test subject falls. In the testing phase the variable is again hidden (unobservable).
@@ -120,10 +126,9 @@ The first case is more informative. It gives us a possibility to differentiate b
 The next step in the BN model creation is to define a set of arcs between variables (nodes). This set defines relations between skills, questions, and additional information, eventually, also inbetween them.  
 
 \subsection{Model Learning}
-The last action to complete a BN is to define conditional probability tables (CPT) for each node. This is done in two steps. In the first one we manually create CPTs (probability of its states given the state of its parent) for every node. Values in these tables should reflect a general expectation and are created with expert knowledge in the field of the test. These probabilities serve as a starting point for the following algorithm. Next we learn the model with standard EM algorithm with collected data. This operation changes values in CPTs to better reflect our specific data.
+The last action to complete a BN is to define conditional probability tables (CPT) for each node. This is done in two steps. In the first one we manually create CPTs (probability of its states given the state of its parent) for every node. Values in these tables should reflect a general expectation and are created with expert knowledge in the field of the test. These probabilities serve as a starting point for the learning algorithm. Next we learn the model with standard EM algorithm with collected data. This operation changes values in CPTs to better reflect our specific data.
 
-\subsubsection{Treating Missing Data}
-BNs have a large advantage in the way they treat missing data (unknown values). During the prediction process unknown values are simply not inserted into the network and the inference is performed without the knowledge. The learning EM algorithm also has no problems with handling missing data.
+BNs have a large advantage in the way they treat missing data (unknown values). During the prediction process unknown values are simply not inserted into the network and the inference is performed without the knowledge. The learning EM algorithm also has no problems handling missing data.
 
 \subsection{Adaptive Test Procedure}
 During the adaptive test we use standard methods of inference in BNs to update the network. These methods compute estimations of skill variables as well as probabilities of success in unanswered questions.\\
@@ -173,17 +178,17 @@ IG(X',e) & = & H(e)  - EH(X',e) \enspace .
 
 \subsection{Converting from Skill Node to Score}
 \label{sec:converting_skill}
-BN models usually produce assumptions about the skills of a student. In some cases this is more useful than a regular score. On the other hand if we want to obtain a score in terms of achieved points we have to transform these skills. It is rather simple for one skill where we introduce a linear transformation from one to another. Basically, we are computing the expected value of the skill variable. The ordering of students stay the same on the score scale as on the expected skill scale. The formula for such a transformation from the skill $S_1$ with states $s_1 \in {1,2,\ldots,n}$ to the score $SC$ is as follows:
+BN models usually produce assumptions about the skills of a student. In some cases this is more useful than a regular score. On the other hand if we want to obtain a score in terms of achieved points we have to transform these skills. It is rather simple for one skill where we introduce a linear transformation from one to another. Basically, we are computing the expected value of the skill variable. The ordering of students stays the same on the score scale as on the skill scale. The formula for such a transformation from the skill $S_1$ with states $s_1 \in \{1,2,\ldots,n\}$ to the score $SC$ is as follows:
 $$SC = \sum_{s_1}{P(S_1=s_1|e)\cdot s_1\cdot C} $$
 where $C$ is a chosen constant and $e$ is the evidence (answers) of the test. The term $n\cdot C$ is the maximum score because $\sum_{s_1}{P(S_1=s_1|e)} = 1$ and $\underset{s_1}\arg \max (s_1\cdot C) = n$
 
-A problem appears when we need to convert from more than one skill variable. Clearly, we can use the same principle and sum same linear transformations of every skill $S_1,\ldots, S_m$ with states $s_1,\ldots s_m$
+A problem appears when we need to convert from more than one skill variable. Clearly, we can use the same principle and sum same linear transformations of every skill $S_1,\ldots, S_m$ with states $\{s_1,\ldots s_m\}$
 \begin{equation}
 SC = \sum_{j=1}^m{\sum_{s_j}}{P(S_j=s_j|e)\cdot s_j\cdot C}
 \label{eq:scoresum}
 \end{equation}
 
-There is a question how large impact should each individual skill variable have on the resulting score. With the formula~\ref{eq:scoresum} the impact depends on the number of states a skill has. It is possible to assign a different scaling factor $C_1,\ldots, C_m$ to each skill variable and the transform the formula~\ref{eq:scoresum} to
+There is a question, how large impact each individual skill variable should have on the resulting score. With the formula~\ref{eq:scoresum} the impact depends on the number of states a skill has. It is possible to assign a different scaling factor $C_1,\ldots, C_m$ to each skill variable and the transform the formula~\ref{eq:scoresum} to
 
 \begin{equation}
 SC = \sum_{j=1}^m{\sum_{s_j}}{P(S_j=s_j|e)\cdot s_j\cdot C_j} 
@@ -193,14 +198,31 @@ SC = \sum_{j=1}^m{\sum_{s_j}}{P(S_j=s_j|e)\cdot s_j\cdot C_j}
 With $s_{max} = max(s_1,\ldots, s_m)$ and $C_j = \frac{s_{max}}{s_j}\cdot C$ we will assign the same influence to every skill and $C$ is the maximum contribution to the score from each one.
 
 \section{Building Models with the Help of NN}
+Neural networks are models for approximations of non-linear functions. There are three different parts of a NN:
+\begin{enumerate}
+	\item an input layer,
+	\item a number of hidden layers, and
+	\item an output layer.
+\end{enumerate}
+Inside each layer there is a number of nodes called neurons. These neurons have connections to the next layer (usually one to each). Every connection has an associated weight. These weights are used to calculate (transform) a value of a neuron from values of its predecessors. One large difference between NNs and previous models is that NNs are used for supervised learning. In this scenario an output (result) is known during the learning. IRT and BNs are working with unsupervised learning. For them we do not need to know the output. That allow us to learn models for unknown values of skills. During the learning it is not necessary\footnote{BNs are able to learn even in a supervised fashion knowing the output value} to input other values than question responses. This pattern does not work with Neural networks. It is necessary to provide target values during the learning algorithm. In this case we can use score results of the test as target values. It means, that the NN model will not predict the skill of a student but his/her score directly.
 
-\subsubsection{TREATING MISSING DATA}
-One of the main problems with NNs is the 
+The input layer of the NN model for CAT is created by as many nodes as the number of questions is. For every question we are filling its result into the neuron. We have two options how to encode information about the answer. It is either 1 (or 1,...,n if it is possible to have more points) for a correct answer and 0 for an incorrect one. Inserting 0 to a node means that there will not be any activation of such node. If we want to activate it even for an incorrect answer we have to encode it as -1. 
 
-\subsection{Selecting Next Question}
+There is a general problem of missing data with NNs. In order to produce a result NN has to obtain values to all its nodes. There are many different methods of overcoming this problem. In our research we input either a value of 0 (there wont be any activation of a neuron then) or an average score for a question (hopefully producing an average result from that question).
+
+The number and size of hidden layers is up to our choice. There is no specific rule how to choose the best specifications of a NN. In the following chapter we present some of our choices.
+
+The last output layer contains only a single node. The value of this node corresponds to predicted score of a student.
+
+Learning of the NN model is done by a standard back propagation algorithm from collected data.
+
+\subsection{Selecting the Next Question}
+In the two previous models we have used the entropy reduction criterion to select the next question. The entropy was measured on the skill variables. We have no skill variables with NN, only a score output. Measuring an entropy in this case is not possible. We propose a simple criterion to deal with the selection of the next question. We want the selected question to provide us as much information as possible about the student. That means that a student who answers incorrectly should be as far as possible on the score scale from the one who answers correctly. Let the $(S|X_{i,x})$ be the score prediction after answering the $i$-th question's state $x$, $P(X_{i,x})$ the probability of state $x$ to be the answer to question $i$. We select a question $X^*$ maximizing the variance of predicted scores:
+
+$$X^* = \arg\max_i \left[ \mathrm{V\underset{x}ar} (S|X_{i,x}) \cdot \prod_x (P(X_{i,x})) \right] $$
 
 \section{Remarks on Models and their Comparison}
-Scoring: Both IRT and BN models usually produce assumptions about the skill of a student. There has to be some transformation to the score scale if we want to produce a score of the test. For BN it was discussed in the section~\ref{sec:converting_skill}. NN models does predict the resulting score directly thus there is no conversion needed.\\
+Scoring: Both IRT and BN models usually produce assumptions about the skill of a student. We have to perform transformations to the score scale if we want to produce a score of the test. For BN it was discussed in the Section~\ref{sec:converting_skill}. For IRT models a similar procedure can be applied. NN models predict the resulting score directly thus there is no conversion needed.\\
 Question nodes: BN allow us to exploit every answer to a question as an information about the student. This may help the adaptive test to evolve faster in case there are some answers which are ''more'' wrong that other wrong answers. As was mentioned above it requires large data samples for learning to avoid overfitting.\\
-Additional Information: BN and NN models allow us to include additional information about a student. This is not possible in the standard version of IRT-CAT. Inclusion of such additional information may improve prediction power of the model especially during the first stages of the test, but its influence rapidly decrease in the later stages. The use of this information is also questionable in terms of fairness. It may be hard to justify results of the test being influenced by factors other than answers. On the other hand if we want to build a tutoring system, there should be no problem in using it.
+Additional Information: BN and NN models allow us to include additional information about a student. This is not possible in the standard version of IRT-CAT. The inclusion of such additional information may improve prediction power of the model especially during the first stages of the test, but its influence rapidly decrease in the later stages. The use of this information is also questionable in terms of fairness. It may be hard to justify results of the test being influenced by factors other than answers. On the other hand if we want to build a tutoring system, there should be no problem using it.
 

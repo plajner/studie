@@ -1,22 +1,17 @@
 \chapter{Computerized Adaptive Testing}
 This chapter introduces the concept of Computerized Adaptive Testing (CAT) and summarizes its advantages and disadvantages.
-
-CAT is a concept of testing which is getting large scientific attention for about two decades. 
-$[Wainer, H., Dorans, N. J., Flaugher, R., Green, B. F., Mislevy, R. J., Steinberg, L., Thissen, D. (2000). Computerized adaptive testing: A primer (2nd ed.). Mahwah: Lawrence Erlbaum.
-van der Linden, W. J., Glas, C. A. W. (2010). Elements of adaptive testing. New York: Springer.
-van der Linden, Wim J., Glas, Cees A. W. (Eds.), Computerized Adaptive Testing: Theory and Practice].$
-
-With CAT we build knowledge-based tests. These tests are computer administered and computer controlled. The computer system is selecting questions for a student taking the test. 
+ 
+CAT is a concept of testing which is getting large scientific attention for about two decades~\cite{Linden2000, Wainer1990, VanderLinden2010}. With CAT we build computer administered and computer controlled tests. The computer system is selecting questions for a student taking the test and evaluating his/her performance. 
 
 
-The process can be divided into two phases: model creation and testing. In the first one the model of the student is created while in the second one the model is used to actually test examinees. There are many different model types which can be used for adaptive testing. In this work we are going to cover Item Response Theory (IRT), which is a model regularly used for CAT, Bayesian networks, and Neural Networks, which are both models commonly used in many areas of artificial intelligence for a large variety of tasks. We will pay closer attention to these models later on but regardless of the model we choose the testing part follows always the same scheme. With the prepared and calibrated model, CAT testing repeats following steps:
+The process can be divided into two phases: model creation and testing. In the first one the model of the student is created while in the second one the model is used to actually test examinees. There are many different model types which can be used for adaptive testing. In this work we are going to cover Item Response Theory (IRT), which is a model regularly used for CAT, Bayesian networks, and Neural Networks, which are both models commonly used in many areas of artificial intelligence for a large variety of tasks. We will pay closer attention to these models later on but regardless of the model we choose the testing part follows always the same scheme. With the prepared and calibrated model, CAT testing repeats following steps.
 
 \label{sec:CATprocess}
 \begin{itemize}
 	\item The next question to be asked is selected.
-	\item This question is asked and a result is obtained.
-	\item This result is inserted into the model.
-	\item The model (i.e. our estimation about the student's skill) is updated with this result.
+	\item This question is asked and an answer is obtained.
+	\item This answer is inserted into the model.
+	\item The model (i.e., our estimation about the student's skill) is updated.
 	\item (optional) Answers to remaining question are estimated
 \end{itemize}
 
@@ -42,4 +37,4 @@ Computer administration: The test is done electronically and thus results are av
 
 \emph{Computer administration:} In order to test students it is necessary to create an environment for such testing on the computer. Also it is necessary for students to have access to a computer rather than having just a pen.
 
-\emph{Results perception:} Last but not least, there might be some issues with the perception of results by students taking the test. It may be hard to explain to them and for them to comprehend the fact, that even though they got completely (or partly) different questions they are sorted on the same scale (sometimes even obtaining the same score). It may seem unfair and incomparable because of the question selection process. The feeling may be the same as with the the Czech driving license test mention in the introduction but there the selection is done at random. In reality CAT tests tend to be more fair the regular paper-pen tests. [CITACE]
+\emph{Results perception:} Last but not least, there might be some issues with the perception of results by students taking the test. It may be hard to explain to them and for them to comprehend the fact, that even though they got completely (or partly) different questions they are sorted on the same scale (sometimes even obtaining the same score). It may seem unfair and incomparable because of the question selection process. The feeling may be the same as with the the Czech driving license test mention in the introduction but there the selection is done at random. In reality CAT tests tend to be more fair the regular paper-pen tests~\cite{Moe1988, Tonidandel2002}.

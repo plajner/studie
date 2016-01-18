@@ -6,27 +6,10 @@
 \usepackage{amssymb}
 \usepackage{url}
 \usepackage{hyperref}
-
-
-
-%\usepackage{listings}
-%\usepackage{xcolor}
-%\usepackage{colortbl}
-%\usepackage{caption}
 \usepackage{pdfpages}
- 
-%\DeclareMathOperator*{\argmin}{\arg\!\min}
-%\DeclareMathOperator*{\argmax}{\arg\!\max}
-%\DeclareCaptionFont{white}{ \color{white} }
-%\DeclareCaptionFormat{listing}{
-%  \colorbox[cmyk]{0.43, 0.35, 0.35,0.01 }{
-%    \parbox{142mm}{\hspace{15pt}#1#2#3}
-%  }
-%}
+\usepackage{breakcites} 
 
-%\captionsetup[lstlisting]{format=listing, labelfont=white, textfont=white, singlelinecheck=false, margin=0pt, font={bf,footnotesize} }
-%\lstset{frame=single, texcl=true, breaklines=true, morecomment=[l]{//}, backgroundcolor=\color{red!10!green!10!blue!5!}}
-%\renewcommand{\lstlistingname}{Ukázka kódu}
+\setcounter{tocdepth}{1}
 
 %\oddsidemargin=10mm   % levý okraj větší (kvůli vazbě)
 %\evensidemargin=0mm
@@ -108,12 +91,11 @@
    }
 \end{center}
 
-\newpage  
+\newpage   
 \tableofcontents 
 
 \newpage % SEM NESAHEJTE!
 
-\chapter*{Introduction} \addcontentsline{toc}{chapter}{Introduction} 
 \input{studie_intro.tex} 
 
 \input{studie_chap1.tex}
@@ -130,13 +112,7 @@
 %%%%%%%%%%%%%%%%%%%%%%  Seznam použitých zdrojů  %%%%%%%%%%%%%%%%%%%%%%
 \newpage  % SEM NESAHEJTE!
 
-%LITERATURA
-
-%\newpage % SEM NESAHEJTE!
-%%%%%%%%%%%%%%%%%%%%%%  PŘÍLOHY PRÁCE %%%%%%%%%%%%%%%%%%%%%%
-%\appendix  % přílohy budou opravdu "Přílohy"  :-)     SEM NESAHEJTE!
-%\addcontentsline{toc}{chapter}{Appendix} % přidat položku do obsahu      SEM NESAHEJTE!
-%\part*{Appendix}  % SEM NESAHEJTE!
-%\input{app1.tex} 
+\bibliographystyle{apalike}
+\bibliography{studie}
 
 \end{document} % SEM NESAHEJTE!
